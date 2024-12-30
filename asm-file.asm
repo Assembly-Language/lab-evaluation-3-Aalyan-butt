@@ -4,13 +4,8 @@ INCLUDE Irvine32.inc
 ; Declare message for procedure completion
 msg db "Assembly procedure completed successfully.", 0
 
-; Parameters (placeholders, values set by the C function call)
-arr DWORD 0        ; Address of the array
-size DWORD 0       ; Size of the array
-result DWORD 0     ; Address to store the result
-
 .code
-asmfunc PROC
+asmfunc PROC arr:DWORD, array_size:DWORD, result:DWORD
     ; Prologue
     push ebp
     mov ebp, esp
@@ -28,16 +23,16 @@ sum_loop:
     mov ebx, [esi]       ; Load the current element
     test ebx, 1          ; Test if the number is odd
     jz skip_odd          ; Skip addition if even
-
+mov eax,[edi]
     add eax, ebx         ; Add the odd number to EAX
-
+mov [edi], eax 
 skip_odd:
     add esi, 4           ; Move to the next array element (4 bytes per int)
-    dec ecx              ; Decrement the counter
+ ;   dec ecx              ; Decrement the counter
     jmp sum_loop         ; Repeat the loop
 
 end_loop:
-    mov [edi], eax       ; Store the sum in the result variable
+         ; Store the sum in the result variable
 
     ; Print completion message
     mov edx, OFFSET msg
